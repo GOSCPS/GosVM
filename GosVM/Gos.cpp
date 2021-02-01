@@ -111,6 +111,12 @@ int main(int argc,char* argv[])
 		else if (line == "RGT") {
 			NowPush->push_back(GosVM_rgt);
 		}
+		else if (line == "IN") {
+			NowPush->push_back(GosVM_in);
+		}
+		else if (line == "OUT") {
+			NowPush->push_back(GosVM_out);
+		}
 		else {
 			NowPush->push_back(atoll(line.c_str()));
 		}

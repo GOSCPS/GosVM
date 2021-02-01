@@ -363,6 +363,9 @@ int _GosVMRunInstance(GosVMInstance Instance) {
 			}
 			break;
 
+		//TODO:IN
+		//DOTO:OUT
+
 		default:
 			return _GOSVM_UNKNOWN_COMMAND_;
 		}

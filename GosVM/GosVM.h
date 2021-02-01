@@ -70,7 +70,9 @@ extern "C" {
 		GosVM_equal,			/**< 栈比较				*/
 		GosVM_bigger,			/**< 栈比较				*/
 		GosVM_lft,				/**< 算数左移		[位数]	*/
-		GosVM_rgt				/**< 算数右移		[位数]	*/
+		GosVM_rgt,				/**< 算数右移		[位数]	*/
+		GosVM_in,				/**< 输入		[地址]	*/
+		GosVM_out				/**< 输出		[地址]	*/
 	}GosVMInstructionSet;
 
 	/**
