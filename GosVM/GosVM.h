@@ -53,7 +53,7 @@ extern "C" {
 	typedef enum GosVMInstructionSet
 	{
 		GosVM_nop = 0,			/**< 什么都不干			*/
-		GosVM_push = 1,			/**< 入栈		[地址]	*/
+		GosVM_push = 1,			/**< 入栈		[立即数]	*/
 		GosVM_pop = 2,			/**< 出栈		[地址]	*/
 		GosVM_top = 3,			/**< 跳转到栈顶			*/
 		GosVM_call,				/**< 调用		[地址]	*/

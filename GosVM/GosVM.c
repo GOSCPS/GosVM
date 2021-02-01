@@ -43,7 +43,10 @@ int GosVMRun(
 	vm.Instructions = &codes;
 	vm.Stack = stack;
 	
-	return _GosVMRunInstance(vm);
+	int result = _GosVMRunInstance(vm);
+	FreeGosVMStack(stack);
+
+	return stack;
 }
 
 /**

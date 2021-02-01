@@ -25,11 +25,26 @@ extern "C" {
 			return NULL;
 
 		stack->StackSize = Size;
-		stack->StackTop = calloc(1, Size);
+		stack->StackTop = calloc(8, Size);
 		stack->StackNow = stack->StackTop;
 
 		return stack;
 	}
+
+	/**
+	 * @brief 释放栈
+	 * @param stack 要释放的栈
+	*/
+	void FreeGosVMStack(GosVMStack* stack) {
+		if (stack == NULL)
+			return;
+
+		free(stack->StackTop);
+		free(stack);
+		return;
+	}
+
+
 
 	/**
 	 * @brief GosVMStack的Push操作
