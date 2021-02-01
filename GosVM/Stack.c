@@ -67,9 +67,9 @@ int GosVMStackPop(GosVMStack* stack, unsigned long long* result) {
 		stack->StackNow++;
 	}
 	
+	*result = 0;
 	stack->StackNow--;
 	*result = *(stack->StackNow);
-	
 
 	return 0;
 }

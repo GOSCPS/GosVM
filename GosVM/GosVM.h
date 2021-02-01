@@ -56,19 +56,17 @@ typedef enum GosVMInstructionSet
 	GosVM_ret,				/**< 返回				*/
 	GosVM_jmp,				/**< 跳转		[地址]	*/
 	GosVM_jmp_true,			/**< 为真跳转		[地址]	*/
-	GosVM_jmp_false,		/**< 为假跳转		[地址]	*/
-	GosVM_jmp_equal,		/**< 等于则跳转	[地址]	*/
-	GosVM_jmp_not_equal,	/**< 不等于则跳转 [地址]	*/
-	GosVM_jmp_bigger,		/**< 大于则跳转	[地址]	*/
-	GosVM_jmp_smaller,		/**< 小于则跳转	[地址]	*/
 	GosVM_add,				/**< 栈相加				*/
-	GosVM_sub,				/**< 栈相减				*/
 	GosVM_mul,				/**< 栈乘法				*/
 	GosVM_div,				/**< 栈除法				*/
 	GosVM_not,				/**< 逻辑非				*/
 	GosVM_and,				/**< 逻辑与				*/
 	GosVM_or,				/**< 逻辑或				*/
 	GosVM_xor,				/**< 逻辑异或				*/
+	GosVM_equal,			/**< 栈比较				*/
+	GosVM_bigger,			/**< 栈比较				*/
+	GosVM_lft,				/**< 算数左移		[位数]	*/
+	GosVM_rgt				/**< 算数右移		[位数]	*/
 }GosVMInstructionSet;
 
 /**

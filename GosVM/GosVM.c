@@ -102,7 +102,7 @@ int _GosVMRunInstance(GosVMInstance Instance) {
 			}
 			else {
 				//将返回地址打入栈中
-				if (GosVMStackPush(Instance.Stack, GosVM_call_address) != 0) {
+				if (GosVMStackPush(Instance.Stack, GosVM_call_address)) {
 					return _GOSVM_STACK_ERROR_;
 				}
 				pc = GosVM_call_address;
@@ -114,9 +114,9 @@ int _GosVMRunInstance(GosVMInstance Instance) {
 
 		case GosVM_ret:
 			;
-			unsigned long long GosVM_ret_address;
+			unsigned long long GosVM_ret_address = 0;
 			
-			if (GosVMStackPop(Instance.Stack, &GosVM_ret_address) != 0) {
+			if (GosVMStackPop(Instance.Stack, &GosVM_ret_address)) {
 				return _GOSVM_STACK_ERROR_;
 			}
 
@@ -127,6 +127,239 @@ int _GosVMRunInstance(GosVMInstance Instance) {
 			pc--;
 
 			break;
+
+		case GosVM_jmp:
+			_GosVM_SafeAccessNext(Instance.Instructions->InstructionLength, pc);
+			pc++;
+
+			unsigned long long GosVM_jmp_address = *(Instance.Instructions->InstructionAddress + pc);
+			if (GosVM_jmp_address >= Instance.Instructions->InstructionLength) {
+				return _GOSVM_ADDRESS_ERROR_;
+			}
+
+			pc = GosVM_jmp_address;
+			pc--;
+
+			break;
+
+		case GosVM_jmp_true:
+			_GosVM_SafeAccessNext(Instance.Instructions->InstructionLength, pc);
+			pc++;
+
+			unsigned long long GosVM_jmp_true_address = *(Instance.Instructions->InstructionAddress + pc);
+			unsigned long long GosVM_jmp_true_data = 0;
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_jmp_true_data)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVM_jmp_true_data) {
+				if (GosVM_jmp_true_address >= Instance.Instructions->InstructionLength) {
+					return _GOSVM_ADDRESS_ERROR_;
+				}
+				pc = GosVM_jmp_true_address;
+				pc--;
+			}
+
+			break;
+
+		case GosVM_add:
+			;
+			unsigned long long GosVM_add_first = 0;
+			unsigned long long GosVM_add_second = 0;
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_add_first)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_add_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPush(Instance.Stack, GosVM_add_first + GosVM_add_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			break;
+		case GosVM_mul:
+			;
+			unsigned long long GosVM_mul_first = 0;
+			unsigned long long GosVM_mul_second = 0;
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_mul_first)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_mul_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPush(Instance.Stack, GosVM_mul_first * GosVM_mul_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+			break;
+
+		case GosVM_div:
+			;
+			unsigned long long GosVM_div_first = 0;
+			unsigned long long GosVM_div_second = 0;
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_div_first)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_div_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPush(Instance.Stack, GosVM_div_first / GosVM_div_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+			break;
+
+		case GosVM_not:
+			;
+			unsigned long long GosVM_not_ = 0;
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_not_)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPush(Instance.Stack, ~GosVM_not_)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+			break;
+
+		case GosVM_and:
+			;
+			unsigned long long GosVM_and_first = 0;
+			unsigned long long GosVM_and_second = 0;
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_and_first)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_and_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPush(Instance.Stack, GosVM_and_first & GosVM_and_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+			break;
+
+		case GosVM_or:
+			;
+			unsigned long long GosVM_or_first = 0;
+			unsigned long long GosVM_or_second = 0;
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_or_first)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_or_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPush(Instance.Stack, GosVM_or_first | GosVM_or_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+			break;
+
+		case GosVM_xor:
+			;
+			unsigned long long GosVM_xor_first = 0;
+			unsigned long long GosVM_xor_second = 0;
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_xor_first)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_xor_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPush(Instance.Stack, GosVM_xor_first ^ GosVM_xor_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+			break;
+
+		case GosVM_equal:
+			;
+			unsigned long long GosVM_equal_first = 0;
+			unsigned long long GosVM_equal_second = 0;
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_equal_first)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_equal_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			unsigned long long GosVM_equal_result = 0;
+			if (GosVM_equal_first == GosVM_equal_second)
+				GosVM_equal_result = 1;
+
+			if (GosVMStackPush(Instance.Stack, GosVM_equal_result)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+			break;
+
+		case GosVM_bigger:
+			;
+			unsigned long long GosVM_bigger_first = 0;
+			unsigned long long GosVM_bigger_second = 0;
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_bigger_first)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_bigger_second)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			unsigned long long GosVM_bigger_result = 0;
+			if (GosVM_bigger_first > GosVM_bigger_second)
+				GosVM_bigger_result = 1;
+
+			if (GosVMStackPush(Instance.Stack, GosVM_bigger_result)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+			break;
+
+		case GosVM_lft:
+			_GosVM_SafeAccessNext(Instance.Instructions->InstructionLength, pc);
+			pc++;
+
+			unsigned long long GosVM_lft_source = 0;
+			unsigned long long GosVM_lft_count = *(Instance.Instructions->InstructionAddress + pc);
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_lft_source)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPush(Instance.Stack, GosVM_lft_source << GosVM_lft_count)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+			break;
+
+		case GosVM_rgt:
+			_GosVM_SafeAccessNext(Instance.Instructions->InstructionLength, pc);
+			pc++;
+
+			unsigned long long GosVM_rgt_source = 0;
+			unsigned long long GosVM_rgt_count = *(Instance.Instructions->InstructionAddress + pc);
+
+			if (GosVMStackPop(Instance.Stack, &GosVM_rgt_source)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+
+			if (GosVMStackPush(Instance.Stack, GosVM_rgt_source >> GosVM_rgt_count)) {
+				return _GOSVM_STACK_ERROR_;
+			}
+			break;
+
 		default:
 			return _GOSVM_UNKNOWN_COMMAND_;
 		}
