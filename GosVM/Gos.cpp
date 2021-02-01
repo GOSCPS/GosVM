@@ -27,7 +27,7 @@ int main(int argc,char* argv[])
 	ifs.open(argv[1]);
 
 	if (!(ifs.is_open() && ifs.good())) {
-		cout << "File Open Error " << errno << strerror(errno) <<  endl;
+		cout << "File Open Error " << errno << " : " << strerror(errno) <<  endl;
 		return -1;
 	}
 
@@ -124,7 +124,7 @@ int main(int argc,char* argv[])
 	binOut.open(argv[2], ios::out | ios::binary | ios::ate);
 
 	if (!(binOut.is_open() && binOut.good())) {
-		cout << "File Open Error " << endl;
+		cout << "File Open Error " << errno << " : " << strerror(errno) << endl;
 		return -1;
 	}
 
