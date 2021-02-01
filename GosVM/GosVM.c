@@ -46,7 +46,7 @@ int GosVMRun(
 	int result = _GosVMRunInstance(vm);
 	FreeGosVMStack(stack);
 
-	return stack;
+	return result;
 }
 
 /**
