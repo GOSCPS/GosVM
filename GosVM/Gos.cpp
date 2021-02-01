@@ -123,17 +123,22 @@ int main(int argc,char* argv[])
 	}
 
 	//CodeSize + Code[]
-	binOut.write((char*)code.size(),sizeof(unsigned long long));
+	unsigned long long size = code.size();
+	binOut.write((char*)&size,sizeof(unsigned long long));
 	
 	for (auto codeIt = code.cbegin(); codeIt != code.cend(); codeIt++) {
-		binOut.write((char*)*codeIt, sizeof(unsigned long long));
+		unsigned long long c = *codeIt;
+		binOut.write((char*)&c, sizeof(unsigned long long));
 	}
 
 	//DataSize + data[]
-	binOut.write((char*)data.size(), sizeof(unsigned long long));
+	
+	size = data.size();
+	binOut.write((char*)&size, sizeof(unsigned long long));
 
 	for (auto dataIt = data.cbegin(); dataIt != data.cend(); dataIt++) {
-		binOut.write((char*)*dataIt, sizeof(unsigned long long));
+		unsigned long long d = *dataIt;
+		binOut.write((char*)&d, sizeof(unsigned long long));
 	}
 
 	ifs.close();
