@@ -11,6 +11,15 @@
 extern "C"	{
 #endif
 
+	/**
+ * @brief 运行虚拟机实例
+ * @param Instance 实例
+ * @return
+ * 返回0虚拟机执行成功 \n
+ * 否则返回错误代码
+*/
+	int _GosVMRunInstance(GosVMInstance Instance);
+
 /**
  * @brief 运行代码
  * @param Code		代码指针
@@ -76,7 +85,15 @@ int _GosVMRunInstance(GosVMInstance Instance) {
 
 			//Push栈
 			pc++;
-			if (GosVMStackPush(Instance.Stack, *(Instance.Instructions->InstructionAddress + pc)) != 0) {
+			unsigned long long GosVM_push_source = 0;
+			GosVM_push_source = (*(Instance.Instructions->InstructionAddress + pc));
+
+			if (GosVM_push_source >= Instance.Datas->DataLength) {
+				return _GOSVM_ADDRESS_ERROR_;
+			}
+
+			if (GosVMStackPush(Instance.Stack,
+				*(Instance.Datas->DataAddress + GosVM_push_source)) != 0) {
 				return _GOSVM_STACK_ERROR_;
 			}
 			break;
@@ -86,9 +103,14 @@ int _GosVMRunInstance(GosVMInstance Instance) {
 
 			//Pop栈，把数据放入数据区
 			pc++;
-			if (GosVMStackPop(Instance.Stack, (
-				Instance.Datas->DataAddress + 
-				(*(Instance.Instructions->InstructionAddress+pc)))) != 0) {
+			unsigned long long GosVM_pop_address = 0;
+			GosVM_pop_address = (*(Instance.Instructions->InstructionAddress + pc));
+
+			if (GosVM_pop_address >= Instance.Datas->DataLength) {
+				return _GOSVM_ADDRESS_ERROR_;
+			}
+
+			if (GosVMStackPop(Instance.Stack, Instance.Datas->DataAddress + GosVM_pop_address) != 0) {
 				return _GOSVM_STACK_ERROR_;
 			}
 			break;
@@ -367,7 +389,40 @@ int _GosVMRunInstance(GosVMInstance Instance) {
 			break;
 
 		//TODO:IN
-		//DOTO:OUT
+		//TODO:OUT
+		case GosVM_put:
+			_GosVM_SafeAccessNext(Instance.Instructions->InstructionLength, pc);
+
+			//PUSH栈，代码段
+			pc++;
+			unsigned long long GosVM_put_address = 0;
+			GosVM_put_address = (*(Instance.Instructions->InstructionAddress + pc));
+
+			if (GosVM_put_address >= Instance.Instructions->InstructionLength) {
+				return _GOSVM_ADDRESS_ERROR_;
+			}
+
+			if (GosVMStackPush(Instance.Stack, *(Instance.Instructions->InstructionAddress + GosVM_put_address)) != 0) {
+				return _GOSVM_STACK_ERROR_;
+			}
+			break;
+
+		case GosVM_get:
+			_GosVM_SafeAccessNext(Instance.Instructions->InstructionLength, pc);
+
+			//Pop栈，把数据放入代码
+			pc++;
+			unsigned long long GosVM_get_address = 0;
+			GosVM_get_address = (*(Instance.Instructions->InstructionAddress + pc));
+
+			if (GosVM_get_address >= Instance.Instructions->InstructionLength) {
+				return _GOSVM_ADDRESS_ERROR_;
+			}
+
+			if (GosVMStackPop(Instance.Stack,Instance.Instructions->InstructionAddress + GosVM_get_address) != 0) {
+				return _GOSVM_STACK_ERROR_;
+			}
+			break;
 
 		default:
 			return _GOSVM_UNKNOWN_COMMAND_;

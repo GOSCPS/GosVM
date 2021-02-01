@@ -52,27 +52,29 @@ extern "C" {
 	*/
 	typedef enum GosVMInstructionSet
 	{
-		GosVM_nop = 0,			/**< 什么都不干			*/
-		GosVM_push = 1,			/**< 入栈		[立即数]	*/
-		GosVM_pop = 2,			/**< 出栈		[地址]	*/
-		GosVM_top = 3,			/**< 跳转到栈顶			*/
-		GosVM_call,				/**< 调用		[地址]	*/
-		GosVM_ret,				/**< 返回				*/
-		GosVM_jmp,				/**< 跳转		[地址]	*/
-		GosVM_jmp_true,			/**< 为真跳转		[地址]	*/
-		GosVM_add,				/**< 栈相加				*/
-		GosVM_mul,				/**< 栈乘法				*/
-		GosVM_div,				/**< 栈除法				*/
-		GosVM_not,				/**< 逻辑非				*/
-		GosVM_and,				/**< 逻辑与				*/
-		GosVM_or,				/**< 逻辑或				*/
-		GosVM_xor,				/**< 逻辑异或				*/
-		GosVM_equal,			/**< 栈比较				*/
-		GosVM_bigger,			/**< 栈比较				*/
-		GosVM_lft,				/**< 算数左移		[位数]	*/
-		GosVM_rgt,				/**< 算数右移		[位数]	*/
-		GosVM_in,				/**< 输入		[地址]	*/
-		GosVM_out				/**< 输出		[地址]	*/
+		GosVM_nop = 0,			/**< 什么都不干				*/
+		GosVM_push = 1,			/**< 入栈		[Data地址]	*/
+		GosVM_pop = 2,			/**< 出栈		[Data地址]	*/
+		GosVM_top = 3,			/**< 跳转到栈顶				*/
+		GosVM_call,				/**< 调用		[Code地址]	*/
+		GosVM_ret,				/**< 返回					*/
+		GosVM_jmp,				/**< 跳转		[Code地址]	*/
+		GosVM_jmp_true,			/**< 为真跳转		[Code地址]	*/
+		GosVM_add,				/**< 栈相加					*/
+		GosVM_mul,				/**< 栈乘法					*/
+		GosVM_div,				/**< 栈除法					*/
+		GosVM_not,				/**< 逻辑非					*/
+		GosVM_and,				/**< 逻辑与					*/
+		GosVM_or,				/**< 逻辑或					*/
+		GosVM_xor,				/**< 逻辑异或					*/
+		GosVM_equal,			/**< 栈比较					*/
+		GosVM_bigger,			/**< 栈比较					*/
+		GosVM_lft,				/**< 算数左移		[立即数]		*/
+		GosVM_rgt,				/**< 算数右移		[立即数]		*/
+		GosVM_in,				/**< 输入		[IO地址]		*/
+		GosVM_out,				/**< 输出		[IO地址]		*/
+		GosVM_put,				/**< 出栈		[Code地址]	*/
+		GosVM_get				/**< 入栈		[Code地址]	*/
 	}GosVMInstructionSet;
 
 	/**
