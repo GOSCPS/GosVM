@@ -6,70 +6,79 @@
  * Copyright (c) 2020-2021 GOSCPS 保留所有权利.
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "Stack.h"
 
-/**
- * @brief	获取GosVMStack
- * @param	Size 栈大小
- * @return	新的GosVMStack
-*/
-GosVMStack* GetGosVMStack(unsigned long long Size) {
-	GosVMStack* stack = calloc(1, sizeof(GosVMStack));
 
-	if (stack == NULL)
-		return NULL;
+	/**
+	 * @brief	获取GosVMStack
+	 * @param	Size 栈大小
+	 * @return	新的GosVMStack
+	*/
+	GosVMStack* GetGosVMStack(unsigned long long Size) {
+		GosVMStack* stack = calloc(1, sizeof(GosVMStack));
 
-	stack->StackSize = Size;
-	stack->StackTop = calloc(1, Size);
-	stack->StackNow = stack->StackTop;
+		if (stack == NULL)
+			return NULL;
 
-	return stack;
-}
+		stack->StackSize = Size;
+		stack->StackTop = calloc(1, Size);
+		stack->StackNow = stack->StackTop;
 
-/**
- * @brief GosVMStack的Push操作
- * @param stack 栈指针
- * @param data push的数据
- * @return 
- * 0					操作成功 \n
- * _GOSVM_STACK_MAX_	堆栈溢出 \n
- * _GOSVM_PTR_WAS_NULL_ stack指针为NULL \n
-*/
-int GosVMStackPush(GosVMStack* stack, unsigned long long data) {
-	if (stack == NULL) {
-		return _GOSVM_PTR_WAS_NULL_;
+		return stack;
 	}
 
-	if ((stack->StackTop + stack->StackSize) <= stack->StackNow) {
-		stack->ErrorCode = _GOSVM_STACK_MAX_;
-		return _GOSVM_STACK_MAX_;
-	}
+	/**
+	 * @brief GosVMStack的Push操作
+	 * @param stack 栈指针
+	 * @param data push的数据
+	 * @return
+	 * 0					操作成功 \n
+	 * _GOSVM_STACK_MAX_	堆栈溢出 \n
+	 * _GOSVM_PTR_WAS_NULL_ stack指针为NULL \n
+	*/
+	int GosVMStackPush(GosVMStack* stack, unsigned long long data) {
+		if (stack == NULL) {
+			return _GOSVM_PTR_WAS_NULL_;
+		}
 
-	*(stack->StackNow) = data;
-	stack->StackNow++;
+		if ((stack->StackTop + stack->StackSize) <= stack->StackNow) {
+			stack->ErrorCode = _GOSVM_STACK_MAX_;
+			return _GOSVM_STACK_MAX_;
+		}
 
-	return 0;
-}
-
-/**
- * @brief GosVMStack的Pop操作
- * @param stack stack 栈指针
- * @param result 操作成功返回的数据地址
- * @return 
- * _GOSVM_PTR_WAS_NULL_ stack为空 \n
- * _GOSVM_STACK_TOP_	目前在栈顶
-*/
-int GosVMStackPop(GosVMStack* stack, unsigned long long* result) {
-	if (stack == NULL)
-		return _GOSVM_PTR_WAS_NULL_;
-
-	if (stack->StackNow == stack->StackTop) {
+		*(stack->StackNow) = data;
 		stack->StackNow++;
-	}
-	
-	*result = 0;
-	stack->StackNow--;
-	*result = *(stack->StackNow);
 
-	return 0;
+		return 0;
+	}
+
+	/**
+	 * @brief GosVMStack的Pop操作
+	 * @param stack stack 栈指针
+	 * @param result 操作成功返回的数据地址
+	 * @return
+	 * _GOSVM_PTR_WAS_NULL_ stack为空 \n
+	 * _GOSVM_STACK_TOP_	目前在栈顶
+	*/
+	int GosVMStackPop(GosVMStack* stack, unsigned long long* result) {
+		if (stack == NULL)
+			return _GOSVM_PTR_WAS_NULL_;
+
+		if (stack->StackNow == stack->StackTop) {
+			stack->StackNow++;
+		}
+
+		*result = 0;
+		stack->StackNow--;
+		*result = *(stack->StackNow);
+
+		return 0;
+	}
+
+#ifdef __cplusplus
 }
+#endif

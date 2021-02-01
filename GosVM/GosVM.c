@@ -7,6 +7,9 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "GosVM.h"
+#ifdef __cplusplus
+extern "C"	{
+#endif
 
 /**
  * @brief 运行代码
@@ -369,3 +372,7 @@ int _GosVMRunInstance(GosVMInstance Instance) {
 
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif

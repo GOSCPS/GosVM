@@ -18,15 +18,20 @@ using namespace std;
 
 int main(int argc,char* argv[])
 {
-	if (argc <= 2) {
-		printf("No Input File!");
+	if (argc < 2) {
+		printf("No Input File!\n");
 	}
 	if (argc >= 4) {
-		printf("Too Many Arguments!");
+		printf("Too Many Arguments!\n");
 	}
 
 	ifstream ifs;
 	ifs.open(argv[1]);
+
+	if (!(ifs.is_open() && ifs.good())) {
+		cout << "File Open Error " << endl;
+		return -1;
+	}
 
 	string line;
 	
@@ -110,18 +115,25 @@ int main(int argc,char* argv[])
 	}
 
 	ofstream binOut;
-	binOut.open(argv[2], ios::in | ios::binary | ios::ate);
+	binOut.open(argv[2], ios::out | ios::binary | ios::ate);
 
-	binOut << (unsigned long long)code.size();
-	
-	for (auto codeIt = code.cbegin(); codeIt != code.cend(); codeIt++) {
-		binOut << (unsigned long long) * codeIt;
+	if (!(binOut.is_open() && binOut.good())) {
+		cout << "File Open Error " << endl;
+		return -1;
 	}
 
-	binOut << (unsigned long long)data.size();
+	//CodeSize + Code[]
+	binOut.write((char*)code.size(),sizeof(unsigned long long));
+	
+	for (auto codeIt = code.cbegin(); codeIt != code.cend(); codeIt++) {
+		binOut.write((char*)*codeIt, sizeof(unsigned long long));
+	}
+
+	//DataSize + data[]
+	binOut.write((char*)data.size(), sizeof(unsigned long long));
 
 	for (auto dataIt = data.cbegin(); dataIt != data.cend(); dataIt++) {
-		binOut << (unsigned long long) * dataIt;
+		binOut.write((char*)*dataIt, sizeof(unsigned long long));
 	}
 
 	ifs.close();

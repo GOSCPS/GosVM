@@ -24,25 +24,34 @@ int main(int argc, char* argv[]) {
 	ifstream ifs;
 	ifs.open(argv[1], ios::binary | ios::in);
 
-	unsigned long long CodeSize;
-
-	ifs >> CodeSize;
-
-	unsigned long long* code = new unsigned long long[CodeSize];
-	for (unsigned long long ptr = 0; ptr < CodeSize; ptr++) {
-		ifs >> *(code + ptr);
+	if (!(ifs.is_open() && ifs.good())) {
+		cout << "File Open Error" << endl;
+		return -1;
 	}
 
-	unsigned long long DataSize;
+	unsigned long long CodeSize = 0;
 
-	ifs >> DataSize;
+	ifs.read((char*)&CodeSize, sizeof(unsigned long long));
+
+	unsigned long long* code = new unsigned long long[CodeSize];
+
+	for (unsigned long long ptr = 0; ptr < CodeSize; ptr++) {
+		ifs.read((char*)(code + ptr), sizeof(unsigned long long));
+	}
+
+	unsigned long long DataSize = 0;
+
+	ifs.read((char*)&DataSize, sizeof(unsigned long long));
 
 	unsigned long long* data = new unsigned long long[DataSize];
 	for (unsigned long long ptr = 0; ptr < DataSize; ptr++) {
-		ifs >> *(data + ptr);
+		ifs.read((char*)(data + ptr), sizeof(unsigned long long));
 	}
 
-	GosVMRun(code, CodeSize, data, DataSize, 4096);
+	int result = GosVMRun(code, CodeSize, data, DataSize, 4096);
 
-	return 0;
+	delete[] code;
+	delete[] data;
+
+	return result;
 }
