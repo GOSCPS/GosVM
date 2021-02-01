@@ -84,6 +84,12 @@ extern "C" {
 	*/
 	int GosVMStackPop(GosVMStack* stack, unsigned long long* result);
 
+	/**
+	 * @brief 释放栈
+	 * @param stack 要释放的栈
+	*/
+	void FreeGosVMStack(GosVMStack* stack);
+
 #ifdef __cplusplus
 }
 #endif
