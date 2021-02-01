@@ -24,7 +24,7 @@ int main(int argc,char* argv[])
 	}
 
 	ifstream ifs;
-	ifs.open(argv[1]);
+	ifs.open(argv[1],ios::in);
 
 	if (!(ifs.is_open() && ifs.good())) {
 		cout << "File Open Error " << errno << " : " << strerror(errno) <<  endl;
@@ -121,7 +121,7 @@ int main(int argc,char* argv[])
 	}
 
 	ofstream binOut;
-	binOut.open(argv[2], ios::out | ios::binary | ios::ate);
+	binOut.open(argv[2], ios::out | ios::binary | ios::trunc);
 
 	if (!(binOut.is_open() && binOut.good())) {
 		cout << "File Open Error " << errno << " : " << strerror(errno) << endl;
