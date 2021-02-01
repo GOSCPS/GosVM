@@ -21,6 +21,7 @@ int main(int argc,char* argv[])
 {
 	if (argc != 3) {
 		cout << "Usage Error" << endl;
+		return -1;
 	}
 
 	ifstream ifs;
