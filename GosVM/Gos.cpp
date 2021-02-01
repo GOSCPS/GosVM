@@ -43,13 +43,15 @@ int main(int argc,char* argv[])
 	while (ifs >> line) {
 		if (line == "Code:") {
 			NowPush = &code;
+			continue;
 		}
 		else if (line == "Data:") {
 			NowPush = &data;
+			continue;
 		}
-		else if (NowPush == nullptr) {
+		if (NowPush == nullptr) {
 			cout << "Error:Not Specify Data Space" << endl;
-			break;
+			return -1;
 		}
 
 		if (line == "NOP") {
@@ -131,7 +133,7 @@ int main(int argc,char* argv[])
 		binOut.write((char*)&c, sizeof(unsigned long long));
 	}
 
-	//DataSize + data[]
+	//DataSize + Data[]
 	
 	size = data.size();
 	binOut.write((char*)&size, sizeof(unsigned long long));
