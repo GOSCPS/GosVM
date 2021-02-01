@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cerrno>
 #include "GosVM.h"
 #include "Stack.h"
 
@@ -18,18 +19,15 @@ using namespace std;
 
 int main(int argc,char* argv[])
 {
-	if (argc < 2) {
-		printf("No Input File!\n");
-	}
-	if (argc >= 4) {
-		printf("Too Many Arguments!\n");
+	if (argc != 3) {
+		cout << "Usage Error" << endl;
 	}
 
 	ifstream ifs;
 	ifs.open(argv[1]);
 
 	if (!(ifs.is_open() && ifs.good())) {
-		cout << "File Open Error " << endl;
+		cout << "File Open Error " << errno << strerror(errno) <<  endl;
 		return -1;
 	}
 
